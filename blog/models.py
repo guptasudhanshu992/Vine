@@ -10,7 +10,9 @@ import json
 import math
 from django.db import transaction
 from django_ckeditor_5.fields import CKEditor5Field
-
+import uuid
+import re
+from django.utils.html import strip_tags
 
 User = get_user_model()
 
@@ -59,129 +61,126 @@ def html_to_json(html_content: str) -> str:
     return json.dumps({"content": content}, separators=(',', ':'))
 
 
-class Category(models.Model):
-    category_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+class BlogCategory(models.Model):
+    blog_category_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    blog_category_name = models.CharField(max_length=100, unique=True)
+    blog_category_slug = models.SlugField(unique=True, blank=True)
+    blog_category_created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
+        if not self.blog_category_slug:
+            self.blog_category_slug = slugify(self.blog_category_name)
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.blog_category_name
 
-class Tag(models.Model):
-    tag_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+class BlogTag(models.Model):
+    blog_tag_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    blog_tag_name = models.CharField(max_length=100, unique=True)
+    blog_tag_slug = models.SlugField(unique=True, blank=True)
+    blog_tag_created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
+        if not self.blog_tag_slug:
+            self.blog_tag_slug = slugify(self.blog_tag_name)
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.blog_tag_name
 
 class Blog(models.Model):
     STATUS_CHOICES = (
         ('draft', 'Draft'),
         ('published', 'Published'),
     )
-    blog_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
-    snippet = CKEditor5Field('Text', config_name='extends',null=True, blank=True)
-    snippet_json = models.JSONField(blank=True, null=True)
-    content_json = models.JSONField(blank=True, null=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
-    seo_title = models.CharField(max_length=200, blank=True)
-    seo_description = models.TextField(blank=True)
-    seo_keywords = models.CharField(max_length=255, blank=True)
-    featured_image = models.ImageField(upload_to='static/blogs/', blank=True, null=True)
-    tags = models.ManyToManyField(Tag, through='BlogTag')
-    created_at = models.DateTimeField(default=timezone.now, blank=True)
-    updated_at = models.DateTimeField(default=timezone.now, blank=True)
-    published_at = models.DateTimeField(default=timezone.now, blank=True)
-    reading_time = models.PositiveIntegerField(default=0)
+    blog_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    blog_title = models.CharField(max_length=200)
+    blog_slug = models.SlugField(unique=True, blank=True)
+    blog_snippet = CKEditor5Field('Excerpt', config_name='extends',null=True, blank=True)
+    blog_snippet_json = models.JSONField(blank=True, null=True)
+    blog_content = CKEditor5Field('Content', config_name='extends',null=True, blank=True)
+    blog_content_json = models.JSONField(blank=True, null=True)
+    blog_author = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog_category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True)
+    blog_tags = models.ManyToManyField(BlogTag, through='BlogTagMapping')
+    blog_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    blog_seo_title = models.CharField(max_length=200, blank=True)
+    blog_seo_description = models.TextField(blank=True)
+    blog_seo_keywords = models.CharField(max_length=255, blank=True)
+    blog_featured_image = models.ImageField(upload_to='blogs/', blank=True, null=True)
+    blog_created_at = models.DateTimeField(default=timezone.now, blank=True)
+    blog_updated_at = models.DateTimeField(default=timezone.now, blank=True)
+    blog_published_at = models.DateTimeField(default=timezone.now, blank=True)
+    blog_reading_time = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
+        if not self.blog_slug:
+            self.blog_slug = slugify(self.blog_title)
         super().save(*args, **kwargs)
 
 
     def __str__(self):
-        return self.title
+        return self.blog_title
 
-class BlogSection(models.Model):
+"""class BlogSection(models.Model):
+    blog_section_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="sections")
-    content_text = CKEditor5Field('Text', config_name='extends',null=True, blank=True)
-    section_image = models.ImageField(upload_to='blogs/', null=True, blank=True)
-    section_image_alt = models.CharField(max_length=255, null=True, blank=True)
-    section_video_url = models.URLField(max_length=500, null=True, blank=True)
+    blog_section_content = CKEditor5Field('Content', config_name='extends',null=True, blank=True)
+    blog_section_image = models.ImageField(upload_to='blogs/', null=True, blank=True)
+    blog_section_image_alt = models.CharField(max_length=255, null=True, blank=True)
+    blog_section_video_url = models.URLField(max_length=500, null=True, blank=True)
 
     def __str__(self):
-        return f"Section of {self.blog.title}"
+        return f"Section of {self.blog.blog_title}"
+"""
 
-class BlogTag(models.Model):
+class BlogTagMapping(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    tag = models.ForeignKey(BlogTag, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('blog', 'tag')
 
-class BlogCategory(models.Model):
+class BlogCategoryMapping(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(BlogCategory, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('blog', 'category')
 
-@receiver(post_save, sender=BlogSection)
+@receiver(post_save, sender=Blog)
 def update_blogpost_word_count(sender, instance, **kwargs):
-    blog = instance.blog
+    text = strip_tags(instance.blog_content)
+    words = re.findall(r'\b\w+\b', text)
+    instance.blog_reading_time = max(1, math.ceil(len(words) / 200)) 
+    Blog.objects.filter(pk=instance.pk).update(blog_reading_time=instance.blog_reading_time)
 
-    total_words = sum(
-        len((section.content_text or "").strip().split()) for section in blog.sections.all()
-    )
-
-    if instance.content_text:
-        total_words += len(instance.content_text.strip().split())
-
-    blog.reading_time = max(1, math.ceil(total_words / 200)) 
-    blog.save(update_fields=['reading_time']) 
-
+"""
 @receiver(post_save, sender=Blog)
 def process_blog_content(sender, instance, **kwargs):
     combined_content = ""
     for section in instance.sections.all():
-        if section.content_text:
-            combined_content += f"{section.content_text}"
-        if section.section_image:
-            combined_content += f'<img src="{section.section_image.url}" alt="{section.section_image_alt or ""}">'
-        if section.section_video_url:
-            combined_content += f'<video src="{section.section_video_url}" controls></video>'
+        if section.blog_section_content:
+            combined_content += f"{section.blog_section_content}"
+        if section.blog_section_image:
+            combined_content += f'<img src="{section.blog_section_image.url}" alt="{section.blog_section_image_alt or ""}">'
+        if section.blog_section_video_url:
+            combined_content += f'<video src="{section.blog_section_video_url}" controls></video>'
 
     new_content_json = html_to_json(combined_content)
-    new_snippet_json = html_to_json(instance.snippet)
+    new_snippet_json = html_to_json(instance.blog_snippet)
     
-    if instance.snippet_json != new_snippet_json:
+    if instance.blog_snippet_json != new_snippet_json:
         def update_snippet():
-            instance.snippet_json = new_snippet_json
-            instance.save(update_fields=['snippet_json'])
+            instance.blog_snippet_json = new_snippet_json
+            instance.save(update_fields=['blog_snippet_json'])
         transaction.on_commit(update_snippet)
 
-    if instance.content_json != new_content_json:
+    if instance.blog_content_json != new_content_json:
         def update_content():
-            instance.content_json = new_content_json
-            instance.save(update_fields=['content_json'])
+            instance.blog_content_json = new_content_json
+            instance.save(update_fields=['blog_content_json'])
 
         transaction.on_commit(update_content)
-
+"""

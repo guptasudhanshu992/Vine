@@ -64,9 +64,11 @@
 				return response.json();
 			})
 			.then(response => {
-				blogPosts = response.data;
+				blogPosts = response.blog_posts;
 				pagination = response.pagination;
+				console.log(pagination);
 				categories = response.categories;
+				console.log(categories);
 				create_category_filters(categories);
 				displayBlogCards(blogPosts);
 				setupPagination(pagination.total_pages, pagination.current_page);
@@ -95,8 +97,8 @@
 	function create_category_filters(categories){
 		const uniqueCategories = new Set();
 		categories.forEach((category)=> {
-			if (category.name) {
-				uniqueCategories.add(category.name);
+			if (category.blog_category_name) {
+				uniqueCategories.add(category.blog_category_name);
 			}
 		});
 		
@@ -115,13 +117,17 @@
 		blogContainer.empty();
 		
 		posts.forEach(post => {
-		const imageUrl = post.featured_image ? post.featured_image : "{% static '404.svg' %}";
-		console.log("featured image:"+post.featured_image+" Image URL: " + imageUrl);
-		const snippetText = parseSnippet(post.snippet_json);
-		const publishedDate = new Date(post.published_at).toLocaleDateString();
-		const slug = post.slug;
+		const imageUrl = post.blog_featured_image ? post.blog_featured_image : "{% static '404.svg' %}";
+		console.log("featured image:"+post.blog_featured_image+" Image URL: " + imageUrl);
+		//let snippetText = parseSnippet(post.blog_snippet_json);
+		let snippetText = post.blog_snippet;
+		maxSnippetLength = 200;
+		snippetText = snippetText.length > maxSnippetLength ? snippetText.substring(0, maxSnippetLength).trim() + '...' : snippetText;
+		console.log("Blog_Snippet:"+post.blog_snippet);
+		const publishedDate = new Date(post.blog_published_at).toLocaleDateString();
+		const slug = post.blog_slug;
 		
-		let categoryBadges = `<span class="badge rounded-0 mr-1 p-2" style="background-color:#C84C05;background-size:'contain';margin:-10px;">${post.category}</span>`;
+		let categoryBadges = `<span class="badge rounded-0 mr-1 p-2" style="background-color:#C84C05;background-size:'contain';margin:-10px;">${post.blog_category}</span>`;
 		
 		const blogCard = `
 		<div class="col-md-4">
@@ -131,12 +137,12 @@
 					${categoryBadges}
 					</div>
 					<footer class="position-absolute bottom-0 w-100 d-flex align-items-center justify-content-center text-white" style="background: rgba(0, 0, 0, 0.7);">
-						<p class="py-3 px-2 m-0">&#128197; Updated: ${new Date(post.updated_at).toLocaleDateString()} | &#128337; ${post.reading_time} min</p>
+						<p class="py-3 px-2 m-0">&#128197; Updated: ${new Date(post.blog_updated_at).toLocaleDateString()} | &#128337; ${post.blog_reading_time} min</p>
 					</footer>
 				</div>
 
 				<div class="card-body" style="border-radius:0;">
-					<h5 class="card-title text-dark fw-bold">${post.title}</h5>
+					<h5 class="card-title text-dark fw-bold">${post.blog_title}</h5>
 					<p class="card-text text-justify  text-muted">
 					  ${snippetText}
 					</p>

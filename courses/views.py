@@ -14,7 +14,7 @@ class PublishedCourseCardsView(View):
         page_size = request.GET.get('page_size', 12)
         category = request.GET.get('category', 'all')
         
-        queryset = Course.objects.filter(status='published').order_by('-published_at')
+        queryset = Course.objects.filter(course_status='published').order_by('-course_published_at')
         if category and category.lower() != "all":
             queryset = queryset.filter(category__name__iexact=category)
 

@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Blog, Category
+from .models import Blog, BlogCategory
 from .serializers import BlogSerializer, BlogDetailSerializer, CategorySerializer
 from django.views.generic import DetailView
 from django.shortcuts import get_object_or_404
@@ -11,12 +11,12 @@ import time
 class PublishedBlogPaginatedView(View):
     def get(self, request, *args, **kwargs):
         page = request.GET.get('page', 1)
-        page_size = request.GET.get('page_size', 12)
+        page_size = request.GET.get('page_size', 120)
         category = request.GET.get('category')
         
-        queryset = Blog.objects.filter(status='published').order_by('-published_at')
+        queryset = Blog.objects.filter(blog_status='published').order_by('-blog_updated_at')
         if category and category.lower() != "all":
-            queryset = queryset.filter(category__name__iexact=category)
+            queryset = queryset.filter(blog_category__blog_category_name__iexact=category)
 
         paginator = Paginator(queryset, page_size)
         try:
@@ -28,11 +28,11 @@ class PublishedBlogPaginatedView(View):
 
         serializer = BlogSerializer(blogs, many=True)
 
-        categories = Category.objects.all()
+        categories = BlogCategory.objects.all()
         category_serializer = CategorySerializer(categories, many=True)
         
         response = {
-            'data': serializer.data,
+            'blog_posts': serializer.data,
             'categories': category_serializer.data,
             'pagination': {
                 'total_pages': paginator.num_pages,
@@ -46,6 +46,9 @@ class PublishedBlogPaginatedView(View):
         
 class BlogDetailAPIView(View):
     def get(self, request, slug):
-        blog = get_object_or_404(Blog, slug=slug)
+        blog = get_object_or_404(Blog, blog_slug=slug)
         serializer = BlogDetailSerializer(blog)
-        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
+        response = {
+            'blog_post': serializer.data
+        }
+        return JsonResponse(response, status=status.HTTP_200_OK)

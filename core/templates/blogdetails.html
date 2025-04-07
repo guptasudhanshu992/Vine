@@ -81,6 +81,73 @@
                 border-bottom: 1px solid #dee2e6;
             }
         }
+		
+		figure.image {
+		  display: inline-block;
+		  margin: 1em;
+		  max-width: 100%;
+		}
+
+		figure.image-style-align-left {
+		  float: left;
+		  margin-right: 1em;
+		}
+
+		figure.image-style-align-right {
+		  float: right;
+		  margin-left: 1em;
+		}
+
+		figure.image-style-align-center {
+		  display: block;
+		  margin-left: auto;
+		  margin-right: auto;
+		  float: none;
+		}
+
+		figure.image img {
+		  max-width: 100%;
+		  height: auto;
+		  display: block;
+		}
+		
+		pre {
+		  background-color: #f5f5f5;
+		  color: #333;
+		  padding: 1rem;
+		  border-radius: 6px;
+		  overflow-x: auto;
+		  white-space: pre-wrap; /* wraps long lines */
+		  word-break: break-word;
+		  font-family: Consolas, Monaco, 'Courier New', monospace;
+		  font-size: 0.95rem;
+		  line-height: 1.5;
+		  max-width: 100%;
+		}
+		code {
+			background-color: transparent;
+			padding: 0;
+			font-family: inherit;
+			white-space: pre-wrap;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 1rem 0;
+			font-size: 1rem;
+		}
+		table th,
+			table td {
+			border: 1px solid #ccc;
+			padding: 0.75rem;
+			text-align: left;
+			vertical-align: top;
+		}
+		table th {
+			background-color: #f2f2f2;
+			font-weight: 600;
+		}
+
     </style>
 {% endblock %}
 
@@ -93,19 +160,8 @@
 
 	<div class="container">
 		<div class="row mt-4">
-			<!-- Sidebar -->
-			<div class="col-md-3 col-lg-3 d-none d-md-block">
-				<div class="sticky-top">
-					<nav id="sidebar-nav" class="bg-light sidebar" style="list-style:none;">
-						<h4>On this Page...</h4>
-						<ul class="nav flex-column"></ul>
-					</nav>
-				</div>
-			</div>
-
-			<!-- Main Content -->
-			<main class="col-md-9 ms-sm-auto col-lg-9 px-md-4">
-				<div id="blog-content"></div>
+			<main class="col-md-8 mx-auto">
+				<div id="blog-content" style="text-align: justify;"></div>
 			</main>
 		</div>
 	</div>
@@ -126,17 +182,23 @@
 				return response.json();
 			})
 			.then(response => {
-				
-				const dateObj = new Date(response.updated_at);
+				console.log(response);
+				blog_post = response.blog_post;
+				console.log(blog_post);
+				console.log("Blog Snippet:"+blog_post.blog_snippet);
+				const dateObj = new Date(blog_post.blog_updated_at);
 				const formattedDate = dateObj.getDate().toString().padStart(2, '0') + "-" +
 				(dateObj.getMonth() + 1).toString().padStart(2, '0') + "-" +
 				dateObj.getFullYear();
 
-				title_meta = "Last Updated : " + formattedDate + " | Reading Time : " + response.reading_time + " min";
-				$('#title').html(response.title);
+				title_meta = "Last Updated : " + formattedDate + " | Reading Time : " + blog_post.blog_reading_time + " min";
+				$('#title').html(blog_post.blog_title);
 				$('#title-meta').html(title_meta);
-				article_json=JSON.parse(response.content_json);
-				jsonToHtml(article_json.content, '#blog-content', '#sidebar-nav');
+				$('#blog-content').html(blog_post.blog_content);
+				formatVideos();
+				//article_json=JSON.parse(blog_post.blog_content_json);
+				//console.log("Article:"+article_json);
+				//jsonToHtml(article_json.content, '#blog-content', '#sidebar-nav');
 			})
 			.catch(error => {
 				console.error('Error fetching article:', error);
@@ -168,16 +230,13 @@
 						headingCounter++;
 						let headingId = `heading-${headingCounter}`;
 
-						// Create heading
 						let heading = $(`<${item.type}>`)
 							.attr("id", headingId)
 							.text(item.text)
 							.addClass("content-section");
 
-						// Create a wrapper div to hold heading + nested content
 						element = $("<div>").addClass("heading-wrapper").append(heading);
 
-						// Add heading to sidebar navigation
 						let sidebarItem = $("<li>").addClass("nav-item");
 						let sidebarLink = $("<a>")
 							.addClass("nav-link")
@@ -187,7 +246,6 @@
 						sidebarItem.append(sidebarLink);
 						$(sidebarContainer).append(sidebarItem);
 
-						// Append nested content outside the heading tag
 						if (item.content) {
 							let nestedContainer = $("<div>").addClass("nested-content");
 							item.content.forEach(child => nestedContainer.append(createElement(child)));
@@ -207,6 +265,21 @@
 			});
 		}
 	}
-
+	
+	function formatVideos(){
+		document.querySelectorAll("oembed[url]").forEach(function (element) {
+			var url = element.getAttribute("url");
+			if (url.includes("youtube.com") || url.includes("youtu.be")) {
+				var iframe = document.createElement("iframe");
+				iframe.setAttribute("src", url);
+				iframe.setAttribute("width", "100%");
+				iframe.setAttribute("height", "400");
+				iframe.setAttribute("frameborder", "0");
+				iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+				iframe.setAttribute("allowfullscreen", true);
+				element.parentNode.replaceChild(iframe, element);
+			}
+		});
+	}
 </script>
 {% endblock %}

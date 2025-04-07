@@ -4,3 +4,4 @@ whitenoise==6.9.0
 pillow==11.1.0
 django-tinymce==4.1.0
 beautifulsoup4==4.13.3
+django-ckeditor-5==0.2.17

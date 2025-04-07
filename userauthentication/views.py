@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.core.validators import validate_email
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from .models import Roles, UserRoles, UserDetails
+from django.contrib.auth.models import Group
 from rest_framework import status
 import json
 import time
@@ -20,7 +21,7 @@ def register_new_user(request):
             source = data.get('source', 'Email').strip()
             
             try:
-                role = Roles.objects.get(name='Learner')
+                role = Roles.objects.get_or_create(name='Learner')
             except Roles.DoesNotExist:
                 raise ValueError(f"Role 'Learner' does not exist.")
             
@@ -52,8 +53,11 @@ def register_new_user(request):
 
             user = User.objects.create_user(email=email, password=password, source=source)
             
-            UserRoles.objects.create(user_id=user.user_id, role_id=role.role_id)
+            #UserRoles.objects.create(user_id=user.user_id, role=role.role_id)
             UserDetails.objects.create(user=user)
+            
+            group, created = Group.objects.get_or_create(name='Learner')
+            user.groups.add(group)
             
             login(request, user)
             #send_welcome_email(request, email, firstname, lastname)

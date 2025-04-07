@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.views import View
 from userauthentication.mixins import RedirectAuthenticatedUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from courses.models import Course, Lesson
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 from django.http import Http404
@@ -44,16 +43,8 @@ class CourseDetailsView(DetailView):
         return render(request, 'course_details.html')
 
 class LessonView(DetailView):
-    model = Lesson
-    template_name = 'lesson.html'
-    context_object_name = 'lesson_details'
-
-    def get_object(self):
-        lesson_id = self.kwargs.get('lesson_id')
-        lesson_details = get_object_or_404(Lesson, id=lesson_id)
-
-        return lesson_details
-        
+    def get(self, request, slug):
+        return render(request, 'course_details.html') 
         
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)

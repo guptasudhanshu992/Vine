@@ -126,6 +126,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Directory where Django will collect static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -199,8 +202,9 @@ CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': {
             'items': ['heading', '|', 'bold', 'italic', 'link',
-                      'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
-                    }
+                      'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', 'mediaEmbed', '|', 'undo', 'redo' ],
+                    },
+            'extraPlugins': ['MediaEmbed'],
 
     },
     'extends': {
@@ -261,3 +265,5 @@ CKEDITOR_5_CONFIGS = {
         }
     }
 }
+
+CKEDITOR_5_UPLOAD_PATH = "uploads/"

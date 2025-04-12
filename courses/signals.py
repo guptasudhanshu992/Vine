@@ -10,8 +10,8 @@ def update_course_content(sender, instance, **kwargs):
     course_hierarchy = []
     for chapter in course.chapters.all():
         chapter_data = {
-            'chapter_name': chapter.title,
-            'lessons': [{'lesson_name': CourseTopic.title, 'lesson_id': CourseTopic.id} for topic in chapter.CourseTopic.all()]
+            'chapter_name': chapter.course_chapter_title,
+            'topics': [{'topic_name': CourseTopic.course_topic_title, 'topic_id': CourseTopic.course_topic_id} for topic in chapter.CourseTopic.all()]
         }
         course_hierarchy.append(chapter_data)
 
@@ -21,16 +21,15 @@ def update_course_content(sender, instance, **kwargs):
 @receiver(post_save, sender=Course)
 def update_course_card_json(sender, instance, created, **kwargs):
     course_card_data = {
-        "course_id": instance.course_id,
-        "title": instance.title,
+        "title": instance.course_title,
         "course_url": instance.course_url,
         "course_image": instance.course_image.url if instance.course_image else None,
-        "price": str(instance.price) if instance.price else None,
-        "short_description": instance.short_description,
-        "author": "",#instance.author.username,
-        "language": instance.language,
-        "preview_video": instance.preview_video,
-        "course_category": instance.course_category.name if instance.course_category else None,
+        "price": str(instance.course_price) if instance.course_price else None,
+        "short_description": instance.course_short_description,
+        "author": instance.course_author.email,
+        "language": instance.course_language,
+        "preview_video": instance.course_preview_video,
+        "course_category": instance.course_category.course_category_name if instance.course_category else None,
     }
     
     if (course_card_data != instance.course_card_json):

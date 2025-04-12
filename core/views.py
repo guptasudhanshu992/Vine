@@ -43,7 +43,7 @@ class CourseDetailsView(DetailView):
         return render(request, 'course_details.html')
 
 class LessonView(DetailView):
-    def get(self, request, slug):
+    def get(self, request):
         return render(request, 'course_details.html') 
         
 def custom_404_view(request, exception):

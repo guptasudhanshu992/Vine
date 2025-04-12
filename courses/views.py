@@ -46,6 +46,6 @@ class PublishedCourseCardsView(View):
 
 class CourseOverviewAPIView(View):
     def get(self, request, slug):
-        course = get_object_or_404(Course, slug=slug)
+        course = get_object_or_404(Course, course_url=slug)
         serializer = CourseSerializer(course)
         return JsonResponse(serializer.data, status=status.HTTP_200_OK)

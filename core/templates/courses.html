@@ -66,10 +66,13 @@
 			.then(response => {
 				console.log(response);
 				course_list = response.data;
+				
 				pagination = response.pagination;
 				categories = response.categories;
+				console.log("CourseList:");
 				console.log(course_list);
 				console.log(pagination);
+				console.log("Categories:");
 				console.log(categories);
 				create_category_filters(categories);
 				displayBlogCards(course_list);
@@ -99,8 +102,8 @@
 	function create_category_filters(categories){
 		const uniqueCategories = new Set();
 		categories.forEach((category)=> {
-			if (category.name) {
-				uniqueCategories.add(category.name);
+			if (category.course_category_name) {
+				uniqueCategories.add(category.course_category_name);
 			}
 		});
 		
@@ -119,16 +122,18 @@
 		courseContainer.empty();
 		
 		course_list.forEach(course => {
-		console.log(course.course_category);
+		console.log(course.course_category.course_category_name);
 		const imageUrl = course.course_image ? course.course_image : "{% static '404.svg' %}";
 		console.log("featured image:"+course.course_image+" Image URL: " + imageUrl);
-		const short_description = course.short_description;
+		let short_description = course.course_short_description;
+		maxdescrLength = 200;
+		short_description = short_description.length > maxdescrLength ? short_description.substring(0, maxdescrLength).trim() + '...' : short_description;
 		console.log(short_description);
-		const publishedDate = new Date(course.published_at).toLocaleDateString();
+		const publishedDate = new Date(course.course_published_at).toLocaleDateString();
 		console.log(publishedDate);
 		const slug = course.course_url;
 		console.log("Slug:"+slug);
-		let categoryBadges = `<span class="badge rounded-0 mr-1 p-2" style="background-color:#C84C05;background-size:'contain';margin:-10px;">${course.course_category.name}</span>`;
+		let categoryBadges = `<span class="badge rounded-0 mr-1 p-2" style="background-color:#C84C05;background-size:'contain';margin:-10px;">${course.course_category.course_category_name}</span>`;
 		
 		const courseCard = `
 		<div class="col-md-4">
@@ -138,12 +143,12 @@
 					${categoryBadges}
 					</div>
 					<footer class="position-absolute bottom-0 w-100 d-flex align-items-center justify-content-center text-white" style="background: rgba(0, 0, 0, 0.7);">
-						<p class="py-3 px-2 m-0">&#128197; Updated: ${new Date(course.published_at).toLocaleDateString()}
+						<p class="py-3 px-2 m-0">&#128197; Updated: ${new Date(course.course_published_at).toLocaleDateString()}
 					</footer>
 				</div>
 
 				<div class="card-body" style="border-radius:0;">
-					<h5 class="card-title text-dark fw-bold">${course.title}</h5>
+					<h5 class="card-title text-dark fw-bold">${course.course_title}</h5>
 					<p class="card-text text-justify  text-muted">
 					  ${short_description}
 					</p>

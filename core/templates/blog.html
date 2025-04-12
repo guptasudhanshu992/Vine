@@ -118,7 +118,7 @@
 		
 		posts.forEach(post => {
 		const imageUrl = post.blog_featured_image ? post.blog_featured_image : "{% static '404.svg' %}";
-		console.log("featured image:"+post.blog_featured_image+" Image URL: " + imageUrl);
+		console.log("featured image:" + post.blog_featured_image + " Image URL: " + imageUrl);
 		//let snippetText = parseSnippet(post.blog_snippet_json);
 		let snippetText = post.blog_snippet;
 		maxSnippetLength = 200;

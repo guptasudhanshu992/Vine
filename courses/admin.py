@@ -16,27 +16,27 @@ class CourseCategoryAdmin(admin.ModelAdmin):
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('course_title', 'course_status', 'course_language', 'course_created_at')
-    prepopulated_fields = {'course_url': ('course_title',)}
-    list_filter = ('course_status', 'course_language', 'course_category')
+    prepopulated_fields = {'course_slug': ('course_title',)}
+    list_filter = ('course_status', 'course_language')
     search_fields = ('course_title',)
 
 
 @admin.register(CourseCategoryMapping)
 class CourseCategoryMappingAdmin(admin.ModelAdmin):
-    list_display = ('course', 'course_category')
+    list_display = ('course','course_category')
 
 
 @admin.register(CourseChapter)
 class CourseChapterAdmin(admin.ModelAdmin):
-    list_display = ('course_chapter_title', 'course', 'course_chapter_order', 'course_chapter_created_at')
+    list_display = ('course_chapter_title', 'course_chapter_order', 'course_chapter_created_at')
     list_filter = ('course',)
     search_fields = ('course_chapter_title',)
 
 
 @admin.register(CourseTopic)
 class CourseTopicAdmin(admin.ModelAdmin):
-    list_display = ('course_topic_title', 'course_chapter', 'course_topic_order', 'course_topic_created_at')
-    list_filter = ('course_chapter',)
+    list_display = ('course_topic_title', 'chapter', 'course_topic_order', 'course_topic_created_at')
+    list_filter = ('chapter',)
     search_fields = ('course_topic_title',)
 
 
@@ -47,12 +47,12 @@ class CourseQuizAdmin(admin.ModelAdmin):
 
 @admin.register(QuizQuestion)
 class QuizQuestionAdmin(admin.ModelAdmin):
-    list_display = ('quiz_question', 'course_quiz', 'course_chapter', 'course_topic')
+    list_display = ('quiz_question', 'quiz', 'chapter', 'topic')
 
 
 @admin.register(QuestionOption)
 class QuestionOptionAdmin(admin.ModelAdmin):
-    list_display = ('question_option', 'quiz_question')
+    list_display = ('question_option', 'question')
 
 
 @admin.register(QuestionAnswerMapping)

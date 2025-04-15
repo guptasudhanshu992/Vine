@@ -7,13 +7,13 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class BlogSerializer(serializers.ModelSerializer):
-    blog_category = serializers.SlugRelatedField(
-        slug_field='blog_category_name',
+    category = serializers.SlugRelatedField(
+        slug_field='name',
         queryset=BlogCategory.objects.all(),
         required=False
     )
 
-    blog_author = serializers.SlugRelatedField(
+    author = serializers.SlugRelatedField(
         slug_field='email',
         queryset=NewUser.objects.all(),
         required=False
@@ -22,26 +22,25 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = [
-            'blog_title', 
-            'blog_slug', 
-            'blog_snippet',
-            'blog_snippet_json', 
-            'blog_author', 
-            'blog_category', 
-            'blog_featured_image', 
-            'blog_updated_at',
-            'blog_published_at',
-            'blog_reading_time'
+            'title', 
+            'slug', 
+            'snippet',
+            'author', 
+            'category', 
+            'cover_image', 
+            'updated_at',
+            'published_at',
+            'reading_time'
         ]
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogCategory
-        fields = ['blog_category_name']
+        fields = ['name']
 
 class BlogDetailSerializer(serializers.ModelSerializer):
-    blog_category = serializers.SlugRelatedField(
-        slug_field='blog_category_name',
+    category = serializers.SlugRelatedField(
+        slug_field='name',
         queryset=BlogCategory.objects.all(),
         required=False
     )
@@ -49,13 +48,12 @@ class BlogDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = [
-            'blog_id',
-            'blog_title',
-            'blog_slug',
-            'blog_snippet',
-            'blog_content',
-            'blog_content_json',
-            'blog_updated_at',
-            'blog_reading_time',
-            'blog_category',
+            'id',
+            'title',
+            'slug',
+            'snippet',
+            'content',
+            'updated_at',
+            'reading_time',
+            'category',
         ]

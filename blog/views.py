@@ -14,9 +14,9 @@ class PublishedBlogPaginatedView(View):
         page_size = request.GET.get('page_size', 120)
         category = request.GET.get('category')
         
-        queryset = Blog.objects.filter(blog_status='published').order_by('-blog_updated_at')
+        queryset = Blog.objects.filter(status='published').order_by('-updated_at')
         if category and category.lower() != "all":
-            queryset = queryset.filter(blog_category__blog_category_name__iexact=category)
+            queryset = queryset.filter(blog_category__name__iexact=category)
 
         paginator = Paginator(queryset, page_size)
         try:
@@ -46,7 +46,7 @@ class PublishedBlogPaginatedView(View):
         
 class BlogDetailAPIView(View):
     def get(self, request, slug):
-        blog = get_object_or_404(Blog, blog_slug=slug)
+        blog = get_object_or_404(Blog, slug=slug)
         serializer = BlogDetailSerializer(blog)
         response = {
             'blog_post': serializer.data

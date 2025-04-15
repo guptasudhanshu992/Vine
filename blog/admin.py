@@ -4,12 +4,6 @@ from .models import (
     BlogTagMapping, BlogCategoryMapping
 )
 
-"""
-class BlogSectionInline(admin.StackedInline):
-    model = BlogSection
-    extra = 1
-"""
-
 class BlogTagMappingInline(admin.TabularInline):
     model = BlogTagMapping
     extra = 1
@@ -22,45 +16,45 @@ class BlogCategoryMappingInline(admin.TabularInline):
 
 @admin.register(BlogCategory)
 class BlogCategoryAdmin(admin.ModelAdmin):
-    list_display = ('blog_category_name', 'blog_category_slug', 'blog_category_created_at')
-    prepopulated_fields = {"blog_category_slug": ("blog_category_name",)}
-    search_fields = ('blog_category_name',)
+    list_display = ('name', 'slug', 'created_at')
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ('name',)
 
 
 @admin.register(BlogTag)
 class BlogTagAdmin(admin.ModelAdmin):
-    list_display = ('blog_tag_name', 'blog_tag_slug', 'blog_tag_created_at')
-    prepopulated_fields = {"blog_tag_slug": ("blog_tag_name",)}
-    search_fields = ('blog_tag_name',)
+    list_display = ('name', 'slug', 'created_at')
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ('name',)
 
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('blog_title', 'blog_slug', 'blog_status', 'blog_author', 'blog_category', 'blog_reading_time', 'blog_published_at')
-    list_filter = ('blog_status', 'blog_category', 'blog_author')
-    search_fields = ('blog_title', 'blog_snippet')
-    prepopulated_fields = {"blog_slug": ("blog_title",)}
-    readonly_fields = ('blog_reading_time', 'blog_created_at', 'blog_updated_at')
+    list_display = ('title', 'slug', 'status', 'author', 'category', 'reading_time', 'published_at')
+    list_filter = ('status', 'category', 'author')
+    search_fields = ('title', 'snippet')
+    prepopulated_fields = {"slug": ("title",)}
+    readonly_fields = ('reading_time', 'published_at', 'updated_at')
     inlines = [BlogTagMappingInline, BlogCategoryMappingInline]
     
     def display_tags(self, obj):
-        return ", ".join(tag.blog_tag_name for tag in obj.blog_tags.all())
+        return ", ".join(tag.name for tag in obj.tags.all())
     display_tags.short_description = 'Tags'
 
 """
 @admin.register(BlogSection)
 class BlogSectionAdmin(admin.ModelAdmin):
-    list_display = ('blog', 'blog_section_image', 'blog_section_video_url')
-    search_fields = ('blog__blog_title',)
+    list_display = ('blog', 'section_image', 'section_video_url')
+    search_fields = ('_title',)
 """
 
 @admin.register(BlogTagMapping)
 class BlogTagMappingAdmin(admin.ModelAdmin):
     list_display = ('blog', 'tag')
-    search_fields = ('blog__blog_title', 'tag__blog_tag_name')
+    search_fields = ('title', 'tag__name')
 
 
 @admin.register(BlogCategoryMapping)
 class BlogCategoryMappingAdmin(admin.ModelAdmin):
     list_display = ('blog', 'category')
-    search_fields = ('blog__blog_title', 'category__blog_category_name')
+    search_fields = ('title', 'category__name')

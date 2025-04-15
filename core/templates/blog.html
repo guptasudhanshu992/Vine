@@ -117,17 +117,17 @@
 		blogContainer.empty();
 		
 		posts.forEach(post => {
-		const imageUrl = post.blog_featured_image ? post.blog_featured_image : "{% static '404.svg' %}";
-		console.log("featured image:" + post.blog_featured_image + " Image URL: " + imageUrl);
+		const imageUrl = post.cover_image ? post.cover_image : "{% static '404.svg' %}";
+		console.log("featured image:" + post.cover_image + " Image URL: " + imageUrl);
 		//let snippetText = parseSnippet(post.blog_snippet_json);
-		let snippetText = post.blog_snippet;
+		let snippetText = $('<div>').html(post.snippet).text();
 		maxSnippetLength = 200;
 		snippetText = snippetText.length > maxSnippetLength ? snippetText.substring(0, maxSnippetLength).trim() + '...' : snippetText;
-		console.log("Blog_Snippet:"+post.blog_snippet);
-		const publishedDate = new Date(post.blog_published_at).toLocaleDateString();
-		const slug = post.blog_slug;
+		console.log("Blog_Snippet:"+post.snippet);
+		const publishedDate = new Date(post.published_at).toLocaleDateString();
+		const slug = post.slug;
 		
-		let categoryBadges = `<span class="badge rounded-0 mr-1 p-2" style="background-color:#C84C05;background-size:'contain';margin:-10px;">${post.blog_category}</span>`;
+		let categoryBadges = `<span class="badge rounded-0 mr-1 p-2" style="background-color:#C84C05;background-size:'contain';margin:-10px;">${post.category}</span>`;
 		
 		const blogCard = `
 		<div class="col-md-4">
@@ -137,12 +137,12 @@
 					${categoryBadges}
 					</div>
 					<footer class="position-absolute bottom-0 w-100 d-flex align-items-center justify-content-center text-white" style="background: rgba(0, 0, 0, 0.7);">
-						<p class="py-3 px-2 m-0">&#128197; Updated: ${new Date(post.blog_updated_at).toLocaleDateString()} | &#128337; ${post.blog_reading_time} min</p>
+						<p class="py-3 px-2 m-0">&#128197; Updated: ${new Date(post.updated_at).toLocaleDateString()} | &#128337; ${post.reading_time} min</p>
 					</footer>
 				</div>
 
 				<div class="card-body" style="border-radius:0;">
-					<h5 class="card-title text-dark fw-bold">${post.blog_title}</h5>
+					<h5 class="card-title text-dark fw-bold">${post.title}</h5>
 					<p class="card-text text-justify  text-muted">
 					  ${snippetText}
 					</p>

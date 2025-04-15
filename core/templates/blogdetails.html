@@ -171,8 +171,8 @@
 {% block extra_scripts %}
 <script>
 	$(document).ready(function () {
-		let blog_title = window.location.pathname.split("/").filter(Boolean).pop();
-		let url = "/api/v1/blog/blog-articles/" + blog_title;
+		let title = window.location.pathname.split("/").filter(Boolean).pop();
+		let url = "/api/v1/blog/blog-articles/" + title;
 		
 		fetch(url)
 			.then(response => {
@@ -183,20 +183,20 @@
 			})
 			.then(response => {
 				console.log(response);
-				blog_post = response.blog_post;
-				console.log(blog_post);
-				console.log("Blog Snippet:"+blog_post.blog_snippet);
-				const dateObj = new Date(blog_post.blog_updated_at);
+				post = response.blog_post;
+				console.log(post);
+				console.log("Blog Snippet:"+post.snippet);
+				const dateObj = new Date(post.updated_at);
 				const formattedDate = dateObj.getDate().toString().padStart(2, '0') + "-" +
 				(dateObj.getMonth() + 1).toString().padStart(2, '0') + "-" +
 				dateObj.getFullYear();
 
-				title_meta = "Last Updated : " + formattedDate + " | Reading Time : " + blog_post.blog_reading_time + " min";
-				$('#title').html(blog_post.blog_title);
+				title_meta = "Last Updated : " + formattedDate + " | Reading Time : " + post.reading_time + " min";
+				$('#title').html(post.title);
 				$('#title-meta').html(title_meta);
-				$('#blog-content').html(blog_post.blog_content);
+				$('#blog-content').html(post.content);
 				formatVideos();
-				//article_json=JSON.parse(blog_post.blog_content_json);
+				//article_json=JSON.parse(post.content_json);
 				//console.log("Article:"+article_json);
 				//jsonToHtml(article_json.content, '#blog-content', '#sidebar-nav');
 			})

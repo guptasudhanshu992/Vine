@@ -14,6 +14,13 @@ from pathlib import Path
 import os
 import environ
 
+import logging
+
+logger = logging.getLogger('allauth')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +39,8 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*']
 
+SITE_ID=1
+
 # Application definition
 INSTALLED_APPS = [
     "core",
@@ -40,6 +49,13 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_ckeditor_5",
     "courses",
+    "payments",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.reddit",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -57,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -272,3 +289,39 @@ CKEDITOR_5_UPLOAD_PATH = "uploads/"
 
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
+
+STRIPE_PUBLISHABLE_KEY = env('PUBLISHABLE_KEY', default="")
+STRIPE_SECRET_KEY = env('SECRET_KEY', default="")
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': env('GOOGLE_CLIENT_ID'),
+            'secret': env('GOOGLE_CLIENT_SECRET'),
+            'key': ''
+        },
+        'AUTH_PARAMS': {'access_type': 'offline'},
+        'SCOPE': ['email', 'profile'],
+    },
+    'facebook': {
+        'APP': {
+            'client_id': env('FACEBOOK_CLIENT_ID'),  # Read from .env
+            'secret': env('FACEBOOK_CLIENT_SECRET'),  # Read from .env
+            'key': ''
+        },
+        'SCOPE': ['email', 'public_profile'],
+    },
+    'reddit': {
+        'APP': {
+            'client_id': env('REDDIT_CLIENT_ID'),  # Read from .env
+            'secret': env('REDDIT_CLIENT_SECRET'),  # Read from .env
+            'key': ''
+        },
+        'SCOPE': ['identity'],
+    }
+}

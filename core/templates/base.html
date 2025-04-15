@@ -2,211 +2,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}My Django Project{% endblock %}</title>
-    
-    <!-- Latest Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <!-- <link href="{% static 'css/styles.css' %}" rel="stylesheet"> -->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
-	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<title>{% block title %}My Django Project{% endblock %}</title>
 
+	<!-- Primary Meta Tags -->
+	{% block primarymetatags%}
+		<meta name="description" content="Explore insightful blogs, detailed courses, and expert content on My Django Project.">
+		<meta name="keywords" content="Django, Blog, Courses, Technical Analysis, Trading, Finance, My Django Project">
+	{% endblock %}
+	<meta name="author" content="Sudhanshu Gupta">
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="My Django Project">
+	<meta property="og:description" content="Explore insightful blogs, detailed courses, and expert content on My Django Project.">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:image" content="{% static 'images/og-image.jpg' %}">
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="My Django Project">
+	<meta name="twitter:description" content="Explore insightful blogs, detailed courses, and expert content on My Django Project.">
+	<meta name="twitter:image" content="{% static 'images/og-image.jpg' %}">
+
+	<!-- Favicon -->
+	<link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+	<!-- DNS Prefetch & Preconnect for performance -->
+	<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+	<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+	<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+	<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+	
+	<!-- Font Awesome -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+
+	<!-- SEO-friendly CSS -->
 	<style>
-	.btn{
-		border-radius:0;
-	}
-	.lnkactive{
-		color:#198754;
-		font-weight:700;
-		text-decoration: underline;
-		text-underline-offset: 10px;
-		text-decoration-thickness: 5px;
-	}
-	.nav-link:hover{
-		color:#198754;
-		text-decoration: underline;
-		text-underline-offset: 10px;
-		text-decoration-thickness: 5px;
-	}
-	.form-control:focus {
-		border-color: #198754;
-		box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
-	}
-	.dropdown-item:hover,
-	.dropdown-item:focus,
-	.dropdown-item.active {
-		background-color: #198754 !important;
-		color: #fff !important;
-	}
+		.btn { 
+			border-radius: 0; 
+		}
+		.lnkactive {
+			color: #198754;
+			font-weight: 700;
+			text-decoration: underline;
+			text-underline-offset: 10px;
+			text-decoration-thickness: 5px;
+		}
+		.nav-link:hover {
+			color: #198754;
+			text-decoration: underline;
+			text-underline-offset: 10px;
+			text-decoration-thickness: 5px;
+		}
+		.form-control:focus {
+			border-color: #198754;
+			box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+		}
+		.dropdown-item:hover,
+		.dropdown-item:focus,
+		.dropdown-item.active {
+			background-color: #198754 !important;
+			color: #fff !important;
+		}
 	</style>
-    {% block extra_head %}{% endblock %}
+
+	{% block extra_head %}{% endblock %}
 </head>
 <body data-bs-spy="scroll" data-bs-target="#sidebar-nav" data-bs-offset="50">
-    <header class="py-4">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/">My Project</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                    <ul class="navbar-nav gap-2">
-					{% if user.is_superuser %}
-                        <li class="nav-item">
-                            <a class="nav-link nav-btn" href="/">Home</a>
-                        </li>
-					{% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link nav-btn" href="/blog/">Blog</a>
-                        </li>
-					{% if user.is_superuser %}
-                        <li class="nav-item">
-                            <a class="nav-link nav-btn" href="/courses/">Courses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-btn" href="/about/">About</a>
-                        </li>
-					{% endif %}
-                    </ul>
+	<header class="py-4" role="banner">
+		<div class="container">
+			<nav class="navbar navbar-expand-lg" role="navigation" aria-label="Main navigation">
+				<a class="navbar-brand" href="/">My Project</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+					<ul class="navbar-nav gap-2">
+						{% if user.is_superuser %}
+						<li class="nav-item">
+							<a class="nav-link nav-btn" href="/">Home</a>
+						</li>
+						{% endif %}
+						<li class="nav-item">
+							<a class="nav-link nav-btn" href="/blog/">Blog</a>
+						</li>
+						{% if user.is_superuser %}
+						<li class="nav-item">
+							<a class="nav-link nav-btn" href="/courses/">Courses</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link nav-btn" href="/about/">About</a>
+						</li>
+						{% endif %}
+					</ul>
 				</div>
-                <div class="d-flex">
-                    {% if user.is_authenticated %}
-						<div class="dropdown">
-							<button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				<div class="d-flex">
+					{% if user.is_authenticated %}
+					<div class="dropdown">
+						<button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fa-regular fa-circle-user"></i> My Account
-							</button>
-							<ul class="dropdown-menu rounded-0">
-								<li><a class="dropdown-item" href="{% url 'profileview' %}">Profile</a></li>
-								<li>
+						</button>
+						<ul class="dropdown-menu rounded-0">
+							<li><a class="dropdown-item" href="{% url 'profileview' %}">Profile</a></li>
+							<li>
 								<form method="POST" action="{% url 'logoutapi' %}" id='logoutform' style="display: inline;">
-								{% csrf_token %}
-								<button class="dropdown-item" type="submit" class="" id='logoutbtn'>Logout <span id="btnspinner" class="spinner-border spinner-border-sm d-none" role="status"></span></button>
+									{% csrf_token %}
+									<button class="dropdown-item" type="submit" id='logoutbtn'>
+										Logout <span id="btnspinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+									</button>
 								</form>
-								</li>
-							</ul>
-						</div>
-                    {% else %}
-                    <div class="btn-group" role="group" aria-label="Auth buttons">
-                        <a class="btn btn-outline-success" href="/login/">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
-                        <a class="btn btn-success" href="/register/">Register <i class="fa-solid fa-user-plus"></i></a>
-                    </div>
-                    {% endif %}
-                </div>
-            </nav>
-        </div>
-    </header>
+							</li>
+						</ul>
+					</div>
+					{% else %}
+					<div class="btn-group" role="group" aria-label="Authentication Buttons">
+						<a class="btn btn-outline-success" href="/login/">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
+						<a class="btn btn-success" href="/register/">Register <i class="fa-solid fa-user-plus"></i></a>
+					</div>
+					{% endif %}
+				</div>
+			</nav>
+		</div>
+	</header>
 
 	<div id="loader" class="d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100 bg-white" style="z-index: 1050;">
 		<div id="spinner" class="spinner-border text-success" role="status">
 			<span class="visually-hidden">Loading...</span>
 		</div>
 	</div>
-	{% block content %}{% endblock %}
 
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container text-center">
-            <span class="text-muted">&copy; {{ year }} My Project. All rights reserved.</span>
-        </div>
-    </footer>
+	<main role="main">
+		{% block content %}{% endblock %}
+	</main>
 
-    <!-- Latest Bootstrap Bundle (includes Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<footer class="footer mt-auto py-3 bg-light" role="contentinfo">
+		<div class="container text-center">
+			<span class="text-muted">&copy; {{ year }} My Project. All rights reserved.</span>
+		</div>
+	</footer>
 
-    <!-- Custom JS -->
-    <!-- <script src="{% static 'js/scripts.js' %}"></script> -->
+	<!-- Bootstrap Bundle with Popper -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-4feDJozxK3cc+vN8kGpJLysI/hUur3Jh4/5qT8PI5Lx7rH2mfGHU3R9VLUAbO3nh" crossorigin="anonymous"></script>
 
-    {% block extra_scripts %}{% endblock %}
-	
-	<script>
-		$(document).ready(function() {
+	{% block extra_scripts %}{% endblock %}
+
+	<!-- Inline Scripts -->
+	<script defer>
+		document.addEventListener("DOMContentLoaded", function () {
 			let currentPath = window.location.pathname.split("/").filter(Boolean).pop();
-			
-			$(".nav-btn").each(function(){
-				let selectedHref = $(this).attr("href").split("/").filter(Boolean).pop();
-				if(selectedHref == currentPath){
-					$(this).addClass("lnkactive");
+			document.querySelectorAll(".nav-btn").forEach(link => {
+				let selectedHref = link.getAttribute("href").split("/").filter(Boolean).pop();
+				if (selectedHref === currentPath) {
+					link.classList.add("lnkactive");
 				}
 			});
-			
 		});
-		$(window).on("load", function () {
-			$("#loader").fadeOut(1, function () {
-				$(this).remove();
-			});
+
+		window.addEventListener("load", function () {
+			document.getElementById("loader")?.remove();
 		});
 	</script>
-	<script>
-    $(document).ready(function () {
-        $("#logoutform").on("submit", function (e) {
-            e.preventDefault();
-			
-			const logoutbtn = document.getElementById('logoutbtn');
-			const btnspinner = document.getElementById('btnspinner');
-			
-			btnspinner.classList.remove('d-none');
-			logoutbtn.disabled=true;
-			
-            let isValid = true;
 
-			const csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+	<script defer>
+		document.addEventListener("DOMContentLoaded", function () {
+			const logoutForm = document.getElementById("logoutform");
+			if (!logoutForm) return;
 
-            if (isValid) {
-				fetch('{% url "logoutapi" %}', {
-					method: 'POST',
+			logoutForm.addEventListener("submit", function (e) {
+				e.preventDefault();
+				const logoutbtn = document.getElementById('logoutbtn');
+				const btnspinner = document.getElementById('btnspinner');
+
+				btnspinner.classList.remove('d-none');
+				logoutbtn.disabled = true;
+
+				fetch("{% url 'logoutapi' %}", {
+					method: "POST",
 					headers: {
-						'Content-Type': 'application/json',
-						'X-CSRFToken': getCookie('csrftoken')
+						"Content-Type": "application/json",
+						"X-CSRFToken": getCookie("csrftoken")
 					},
-					credentials: 'include'
+					credentials: "include"
 				})
-				.then(response => {
-					if (!response.ok) {
-						return response.json().then(error => { throw error; });
-					}
-					return response.json();
-				})
+				.then(response => response.json())
 				.then(data => {
-					console.log('Logout successful : ', data.message);
-					alert('Logout successful : ' + data.message);
+					alert('Logout successful: ' + data.message);
 					window.location.replace(data.redirect_url);
 				})
 				.catch(error => {
-					if (error.name === 'AbortError') {
-						alert('Request timed out. Please try again.');
-					} else {
-						console.error('Logout failed : ', error.message);
-						alert('Logout failed : ' + error.message);
-					}
+					alert('Logout failed: ' + error.message);
 				})
 				.finally(() => {
 					logoutbtn.disabled = false;
 					btnspinner.classList.add('d-none');
 				});
-			}
-        });
+			});
 
-		// Function to get the CSRF token from cookies
-		function getCookie(name) {
-			let cookieValue = null;
-			if (document.cookie && document.cookie !== '') {
-				const cookies = document.cookie.split(';');
-				for (const cookie of cookies) {
-					const trimmedCookie = cookie.trim();
-					if (trimmedCookie.startsWith(name + '=')) {
-						cookieValue = decodeURIComponent(trimmedCookie.substring(name.length + 1));
-						break;
-					}
-				}
+			function getCookie(name) {
+				const value = `; ${document.cookie}`;
+				const parts = value.split(`; ${name}=`);
+				if (parts.length === 2) return parts.pop().split(";").shift();
 			}
-			return cookieValue;
-		}
 		});
 	</script>
 </body>

@@ -45,7 +45,6 @@
 <div class="container mt-3">
   <div class="row">
     <div class="col-md-8">
-		<h3>Description</h3>
 		<div class="description" style="text-align: justify;"></div>
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -66,7 +65,7 @@
         </div>
         <div class="tab-pane" id="course_content" style="text-align: justify;" role="tabpanel" aria-labelledby="course-content-tab">
           <div id="accordion">
-            {% for chapter in course_details.course_content %}
+            {% for chapter in course_details.content %}
             <div class="card mb-2">
               <div class="card-header p-2" id="heading_{{ forloop.counter }}">
                 <h6 class="mb-0">
@@ -111,8 +110,7 @@
             <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>.
           </p>
         </video>
-        <!-- <iframe src="{{ course_details.preview_video }}" width="100%" height="auto" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" title="video1"></iframe> -->
-         <button class="btn btn-success btn-lg">Enroll</button>
+         <button class="btn btn-success btn-lg" onclick="window.location.href='{% url 'course_contents_view' 'lorem-ipsum' %}'">Enroll</button>
         <p><strong>Price:</strong><span class="price"></span></p>
         <p><strong>Language:</strong><span class="language"></span></p>
       </div>
@@ -159,13 +157,12 @@
 	function updateCourseDetails(course_details){
 		console.log("Course Details");
 		console.log(course_details);
-		$('.course-title').html('<h1>' + course_details.course_title + '</h1>');
-		$('.description').html(course_details.course_long_description);
-		$('.learning-outcome').html(course_details.course_learning_outcomes);
-		$('.pre-requisites').html(course_details.course_pre_requisites);
-		$('.price').html(course_details.course_price);
-		$('.language').html(course_details.course_language);
-		//$('.course_content').html(course_details.course_pre_requisites);
+		$('.course-title').html('<h1>' + course_details.title + '</h1>');
+		$('.description').html(course_details.long_description);
+		$('.learning-outcome').html(course_details.learning_outcomes);
+		$('.pre-requisites').html(course_details.pre_requisites);
+		$('.price').html(course_details.price);
+		$('.language').html(course_details.language);
 	}
 </script>
 {% endblock %}

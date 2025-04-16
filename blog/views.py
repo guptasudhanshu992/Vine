@@ -11,7 +11,7 @@ import time
 class PublishedBlogPaginatedView(View):
     def get(self, request, *args, **kwargs):
         page = request.GET.get('page', 1)
-        page_size = request.GET.get('page_size', 120)
+        page_size = request.GET.get('page_size', 12)
         category = request.GET.get('category')
         
         queryset = Blog.objects.filter(status='published').order_by('-updated_at')

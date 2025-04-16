@@ -43,6 +43,7 @@ SITE_ID=1
 
 # Application definition
 INSTALLED_APPS = [
+    "django.contrib.sites",
     "core",
     "userauthentication",
     "blog",
@@ -298,30 +299,36 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': env('GOOGLE_CLIENT_ID'),
-            'secret': env('GOOGLE_CLIENT_SECRET'),
-            'key': ''
-        },
-        'AUTH_PARAMS': {'access_type': 'offline'},
-        'SCOPE': ['email', 'profile'],
-    },
-    'facebook': {
-        'APP': {
-            'client_id': env('FACEBOOK_CLIENT_ID'),  # Read from .env
-            'secret': env('FACEBOOK_CLIENT_SECRET'),  # Read from .env
-            'key': ''
-        },
-        'SCOPE': ['email', 'public_profile'],
-    },
-    'reddit': {
-        'APP': {
-            'client_id': env('REDDIT_CLIENT_ID'),  # Read from .env
-            'secret': env('REDDIT_CLIENT_SECRET'),  # Read from .env
-            'key': ''
-        },
-        'SCOPE': ['identity'],
-    }
-}
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+#SOCIALACCOUNT_PROVIDERS = {
+#    'google': {
+#        'APP': {
+#            'client_id': env('GOOGLE_CLIENT_ID'),
+#            'secret': env('GOOGLE_CLIENT_SECRET'),
+#            'key': ''
+#        },
+#        'AUTH_PARAMS': {'access_type': 'online'},
+#        'SCOPE': ['email', 'profile'],
+#    },
+#    'facebook': {
+#        'APP': {
+#            'client_id': env('FACEBOOK_CLIENT_ID'),
+#            'secret': env('FACEBOOK_CLIENT_SECRET'),
+#            'key': ''
+#        },
+#        'SCOPE': ['email', 'public_profile'],
+#    },
+#    'reddit': {
+#        'APP': {
+#            'client_id': env('REDDIT_CLIENT_ID'),
+#            'secret': env('REDDIT_CLIENT_SECRET'),
+#            'key': ''
+#        },
+#        'SCOPE': ['identity'],
+#    }
+#}

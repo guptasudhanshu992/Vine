@@ -171,24 +171,28 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django_errors.log'),
-        },
-        'console': {
-            'level': 'ERROR',
+        'console':{
             'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file', 'console'],
-            'level': 'ERROR',
-            'propagate': True,
+        'allauth': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        '__main__': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
         },
     },
 }
+
+
+
 
 
 customColorPalette = [
@@ -299,11 +303,15 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+SOCIALACCOUNT_ADAPTER = 'userauthentication.adapter.CustomSocialAccountAdapter'
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = {'email*'}
+
+SOCIALACCOUNT_AUTO_SIGNUP = False
 
 #SOCIALACCOUNT_PROVIDERS = {
 #    'google': {

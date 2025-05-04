@@ -99,7 +99,7 @@
           <!-- Social Buttons -->
           <div class="col-12 col-lg-5 d-flex align-items-center">
             <div class="d-flex gap-3 flex-column w-100 ">
-              <a onclick="signupWithGoogle()" class="btn bsb-btn-2xl btn-outline-danger rounded-0 d-flex align-items-center" aria-label="Continue with Google">
+              <a href="{% provider_login_url 'google' %}" class="btn bsb-btn-2xl btn-outline-danger rounded-0 d-flex align-items-center" aria-label="Continue with Google">
                 <i class="fa-brands fa-google"></i>
                 <span class="ms-2 fs-6 flex-grow-1">Continue with Google</span>
               </a>
@@ -209,9 +209,5 @@ document.addEventListener("DOMContentLoaded", function () {
     return match ? decodeURIComponent(match[2]) : null;
   }
 });
-
-	function signupWithGoogle() {
-		window.location.href = "/accounts/google/login/?process=signup";
-	}
 </script>
 {% endblock %}

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Blog, BlogCategory
-from userauthentication.models import NewUser
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
@@ -15,7 +14,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
     author = serializers.SlugRelatedField(
         slug_field='email',
-        queryset=NewUser.objects.all(),
+        queryset=User.objects.all(),
         required=False
     )
     
